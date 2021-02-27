@@ -16,29 +16,22 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public List<User> getAllUsers() {
-        Session session = entityManager.unwrap(Session.class);
-        Query<User> query = session.createQuery("from User", User.class);
-        return query.getResultList();
+        return entityManager.createQuery("from User", User.class).getResultList();
     }
 
     @Override
     public void saveUser(User user) {
-        Session session = entityManager.unwrap(Session.class);
-        session.saveOrUpdate(user);
+        entityManager.merge(user);
     }
 
     @Override
     public User getUser(int id) {
-        Session session = entityManager.unwrap(Session.class);
-        return session.get(User.class, id);
+        return entityManager.find(User.class, id);
     }
 
     @Override
     public void deleteUser(int id) {
-        Session session = entityManager.unwrap(Session.class);
-        Query<User> query = session.createQuery("delete from User where id=:userId");
-        query.setParameter("userId", id);
-        query.executeUpdate();
+        entityManager.remove(entityManager.find(User.class, id));
     }
 }
 
